@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: TERM_PROJECT
+
+  datasource:
+    url: jdbc:h2:file:./data/termdb;MODE=MySQL;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 30m
+      cookie:
+        name: TERMSESSION
+        http-only: true
+        same-site: lax
+
+app:
+  upload:
+    root-dir: ./uploads
+    profile-subdir: profile
+    public-url-prefix: /files
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
