@@ -21,7 +21,7 @@
   - Validation
   - H2
   - Lombok
-- H2 파일 DB 설정
+- H2 TCP DB 설정
 - 세션 쿠키 설정
 - multipart 업로드 제한
 - CORS 설정

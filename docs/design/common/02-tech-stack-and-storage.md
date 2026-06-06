@@ -5,22 +5,44 @@
 - Language: `Java 21`
 - ORM: `Spring Data JPA`
 - Validation: `spring-boot-starter-validation`
-- DB: `H2 file database`
+- DB: `H2 database (TCP server mode)`
 - Session: `HttpSession`
 - File upload: `MultipartFile`
 
 ## 현재 설정 기준
-- DB URL: `jdbc:h2:file:./data/termdb;MODE=MySQL;AUTO_SERVER=TRUE`
+- DB URL: `jdbc:h2:tcp://localhost/~/termdb;MODE=MySQL`
 - H2 콘솔 사용: `/h2-console`
+- H2 서버 실행: 별도 TCP 서버 기동 후 Spring Boot 연결
 - 세션 쿠키 이름: `TERMSESSION`
 - 업로드 루트: `./uploads`
 - 프로필 이미지 하위 디렉토리: `profile`
 - 공개 URL prefix: `/files`
 
+## 로컬 실행 순서
+1. H2 TCP 서버 실행
+   - `powershell -ExecutionPolicy Bypass -File .\scripts\start-h2-tcp-server.ps1`
+2. Spring Boot 실행
+   - `.\gradlew.bat bootRun`
+3. 브라우저에서 확인
+   - 서비스: `http://localhost:8080`
+   - H2 콘솔: `http://localhost:8080/h2-console`
+
+## H2 콘솔 접속값
+- Saved Settings: `Generic H2 (Embedded)`
+- Driver Class: `org.h2.Driver`
+- JDBC URL: `jdbc:h2:tcp://localhost/~/termdb;MODE=MySQL`
+- User Name: `sa`
+- Password: 비워둠
+
+## H2 콘솔 확인 포인트
+- 현재 프로젝트의 주요 테이블: `users`, `projects`, `project_categories`, `project_skills`
+- 실제 DB 파일 위치: `C:\Users\mhtig\termdb.mv.db`
+- H2 TCP 서버가 꺼져 있으면 콘솔 접속이나 Spring Boot 기동이 실패할 수 있다.
+
 ## H2를 유지하는 이유
-- 현재 프로젝트가 이미 H2 file DB 기준으로 잡혀 있다.
-- 검사 시 외부 DB 설치 없이 바로 실행할 수 있다.
-- 애플리케이션 재시작 후에도 데이터가 유지된다.
+- 강의자료 예시와 같은 `jdbc:h2:tcp://localhost/~/...` 형식을 사용한다.
+- MySQL 설치 없이도 JPA 실습과 과제 검증이 가능하다.
+- 실제 데이터 파일은 사용자 홈 기준 `~/termdb.mv.db`에 유지된다.
 - H2 콘솔로 데이터 검증이 쉽다.
 
 ## 저장 전략

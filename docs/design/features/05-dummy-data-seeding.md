@@ -19,7 +19,7 @@
 ## 시딩 전략
 - 애플리케이션 기동 시 DB가 비어 있을 때만 insert
 - `CommandLineRunner` 또는 SQL seed 사용
-- H2 file DB이므로 최초 1회 생성 후 재기동 시 중복 insert 방지 필요
+- H2 TCP 모드이므로 실제 데이터 파일은 `~/termdb.mv.db`에 유지되고, 재기동 시 중복 insert 방지 필요
 
 ## 예시 계정
 - 개발자: `dev1 / 1234`

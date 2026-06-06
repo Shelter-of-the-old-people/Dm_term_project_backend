@@ -3,7 +3,7 @@ spring:
     name: TERM_PROJECT
 
   datasource:
-    url: jdbc:h2:file:./data/termdb;MODE=MySQL;AUTO_SERVER=TRUE
+    url: jdbc:h2:tcp://localhost/~/termdb;MODE=MySQL
     driver-class-name: org.h2.Driver
     username: sa
     password:
