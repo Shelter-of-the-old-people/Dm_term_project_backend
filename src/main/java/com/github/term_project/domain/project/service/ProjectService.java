@@ -23,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProjectService {
 
+    private static final int PROJECT_PAGE_SIZE = 4;
+
     private final ProjectRepository projectRepository;
 
-    public PageResponse<ProjectListItemResponse> getProjects(String type, String sort, int page, int size) {
-        validatePageParameters(page, size);
+    public PageResponse<ProjectListItemResponse> getProjects(String type, String sort, int page) {
+        validatePageParameters(page);
 
         ProjectTypeFilter typeFilter = ProjectTypeFilter.from(type);
         ProjectSortType sortType = ProjectSortType.from(sort);
@@ -37,14 +39,14 @@ public class ProjectService {
                 .sorted(resolveComparator(sortType))
                 .toList();
 
-        int fromIndex = Math.min((page - 1) * size, filtered.size());
-        int toIndex = Math.min(fromIndex + size, filtered.size());
+        int fromIndex = Math.min((page - 1) * PROJECT_PAGE_SIZE, filtered.size());
+        int toIndex = Math.min(fromIndex + PROJECT_PAGE_SIZE, filtered.size());
 
         List<ProjectListItemResponse> items = filtered.subList(fromIndex, toIndex).stream()
                 .map(this::toListItemResponse)
                 .toList();
 
-        return PageResponse.of(items, page, size, filtered.size());
+        return PageResponse.of(items, page, PROJECT_PAGE_SIZE, filtered.size());
     }
 
     public ProjectDetailResponse getProject(Long projectId) {
@@ -53,12 +55,9 @@ public class ProjectService {
         return toDetailResponse(project);
     }
 
-    private void validatePageParameters(int page, int size) {
+    private void validatePageParameters(int page) {
         if (page < 1) {
             throw new BusinessException(ErrorCode.INVALID_INPUT, "page must be greater than or equal to 1.");
-        }
-        if (size < 1) {
-            throw new BusinessException(ErrorCode.INVALID_INPUT, "size must be greater than or equal to 1.");
         }
     }
 

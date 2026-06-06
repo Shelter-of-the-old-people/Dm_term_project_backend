@@ -1,5 +1,6 @@
 package com.github.term_project.domain.project.entity;
 
+import com.github.term_project.domain.user.entity.User;
 import com.github.term_project.global.common.BaseTimeEntity;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -7,10 +8,12 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
@@ -30,6 +33,10 @@ public class Project extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", nullable = false)
+    private User client;
 
     @Column(nullable = false, length = 120)
     private String title;
@@ -104,6 +111,7 @@ public class Project extends BaseTimeEntity {
 
     @Builder
     public Project(
+            User client,
             String title,
             String area,
             EmploymentType employmentType,
@@ -125,6 +133,7 @@ public class Project extends BaseTimeEntity {
             String summary,
             List<String> categories,
             List<String> skills) {
+        this.client = client;
         this.title = title;
         this.area = area;
         this.employmentType = employmentType;
@@ -146,5 +155,17 @@ public class Project extends BaseTimeEntity {
         this.summary = summary;
         this.categories = new ArrayList<>(categories);
         this.skills = new ArrayList<>(skills);
+    }
+
+    public void increaseApplicationCount() {
+        this.applicationCount = this.applicationCount + 1;
+    }
+
+    public void syncApplicationCount(int applicationCount) {
+        this.applicationCount = Math.max(0, applicationCount);
+    }
+
+    public boolean isOwnedBy(Long clientId) {
+        return client != null && client.getId().equals(clientId);
     }
 }

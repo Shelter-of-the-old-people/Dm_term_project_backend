@@ -40,6 +40,7 @@ out/
 /data/
 /uploads/
 /logs/
+/.codex/
 /.tmp_ppt_media/
 /tmp_ppt_summaries.json
 /tmp_ppt_summaries_clean.json

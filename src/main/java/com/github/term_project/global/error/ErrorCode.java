@@ -17,6 +17,11 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."),
     ROLE_MISMATCH(HttpStatus.FORBIDDEN, "해당 역할이 아닙니다."),
+    APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 지원서입니다."),
+    DUPLICATE_APPLICATION(HttpStatus.CONFLICT, "이미 지원한 프로젝트입니다."),
+    PROJECT_ALREADY_CLOSED(HttpStatus.CONFLICT, "마감된 프로젝트에는 지원할 수 없습니다."),
+    APPLICATION_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "프로젝트 유형과 지원서 유형이 일치하지 않습니다."),
+    ONSITE_LINE_REQUIRED(HttpStatus.BAD_REQUEST, "상주 지원은 최소 1개의 포지션 정보가 필요합니다."),
 
     TAG_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "검색태그는 최대 5개까지 등록할 수 있습니다."),
     CONTACT_INFO_INCLUDED(HttpStatus.BAD_REQUEST, "지원 내용에 이메일 또는 전화번호를 포함할 수 없습니다."),

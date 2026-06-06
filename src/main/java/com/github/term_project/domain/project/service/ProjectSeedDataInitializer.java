@@ -4,19 +4,26 @@ import com.github.term_project.domain.project.entity.EmploymentType;
 import com.github.term_project.domain.project.entity.Project;
 import com.github.term_project.domain.project.entity.RecruitStatus;
 import com.github.term_project.domain.project.repository.ProjectRepository;
+import com.github.term_project.domain.user.entity.User;
+import com.github.term_project.domain.user.repository.UserRepository;
+import com.github.term_project.global.error.BusinessException;
+import com.github.term_project.global.error.ErrorCode;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Order(2)
 @RequiredArgsConstructor
 public class ProjectSeedDataInitializer implements ApplicationRunner {
 
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -26,9 +33,12 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
         }
 
         LocalDate today = LocalDate.now();
+        User defaultClient = userRepository.findByLoginId("client1")
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "client1 seed user is required."));
 
         projectRepository.saveAll(List.of(
                 buildOutsourcingProject(
+                        defaultClient,
                         "브랜드 사이트 리뉴얼 및 관리자 페이지 구축",
                         "서울 강남구",
                         RecruitStatus.OPEN,
@@ -49,6 +59,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발", "디자인", "기획"),
                         List.of("React", "Spring Boot", "Figma")),
                 buildOutsourcingProject(
+                        defaultClient,
                         "공공기관 예약 시스템 고도화",
                         "서울 중구",
                         RecruitStatus.URGENT,
@@ -69,6 +80,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발", "기획"),
                         List.of("Vue", "Java", "Oracle")),
                 buildResidentProject(
+                        defaultClient,
                         "이커머스 운영 프론트엔드 상주 인력",
                         "경기 성남시",
                         RecruitStatus.OPEN,
@@ -88,6 +100,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발", "디자인"),
                         List.of("React", "TypeScript", "Tailwind CSS")),
                 buildOutsourcingProject(
+                        defaultClient,
                         "교육 플랫폼 랜딩 페이지와 CMS 제작",
                         "부산 해운대구",
                         RecruitStatus.REVIEWING,
@@ -108,6 +121,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발", "디자인"),
                         List.of("Next.js", "Node.js", "PostgreSQL")),
                 buildResidentProject(
+                        defaultClient,
                         "금융 서비스 QA 자동화 및 운영 지원",
                         "서울 영등포구",
                         RecruitStatus.OPEN,
@@ -127,6 +141,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발", "기획"),
                         List.of("Selenium", "Java", "Jenkins")),
                 buildOutsourcingProject(
+                        defaultClient,
                         "헬스케어 앱 백엔드 API 구축",
                         "대전 유성구",
                         RecruitStatus.OPEN,
@@ -147,6 +162,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발"),
                         List.of("Spring Boot", "JPA", "MySQL")),
                 buildResidentProject(
+                        defaultClient,
                         "B2B SaaS 디자인 시스템 운영",
                         "서울 서초구",
                         RecruitStatus.URGENT,
@@ -166,6 +182,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("디자인", "기획"),
                         List.of("Figma", "Design System", "Accessibility")),
                 buildOutsourcingProject(
+                        defaultClient,
                         "커뮤니티 서비스 검색/알림 기능 추가",
                         "인천 연수구",
                         RecruitStatus.OPEN,
@@ -186,6 +203,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발", "기획"),
                         List.of("Spring", "Elasticsearch", "Redis")),
                 buildResidentProject(
+                        defaultClient,
                         "제조업 ERP 유지보수 백엔드 상주",
                         "울산 남구",
                         RecruitStatus.REVIEWING,
@@ -205,6 +223,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발"),
                         List.of("Spring MVC", "MSSQL", "MyBatis")),
                 buildOutsourcingProject(
+                        defaultClient,
                         "여행 플랫폼 숙소 상세 페이지 개편",
                         "제주 제주시",
                         RecruitStatus.OPEN,
@@ -225,6 +244,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발", "디자인"),
                         List.of("React", "GA4", "A/B Testing")),
                 buildOutsourcingProject(
+                        defaultClient,
                         "병원 예약 키오스크 화면 개발",
                         "광주 서구",
                         RecruitStatus.URGENT,
@@ -245,6 +265,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
                         List.of("개발", "디자인"),
                         List.of("React", "Electron", "Accessibility")),
                 buildResidentProject(
+                        defaultClient,
                         "콘텐츠 스타트업 데이터 대시보드 분석가",
                         "서울 마포구",
                         RecruitStatus.OPEN,
@@ -266,6 +287,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
     }
 
     private Project buildOutsourcingProject(
+            User client,
             String title,
             String area,
             RecruitStatus recruitStatus,
@@ -286,6 +308,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
             List<String> categories,
             List<String> skills) {
         return Project.builder()
+                .client(client)
                 .title(title)
                 .area(area)
                 .employmentType(EmploymentType.OUTSOURCING)
@@ -311,6 +334,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
     }
 
     private Project buildResidentProject(
+            User client,
             String title,
             String area,
             RecruitStatus recruitStatus,
@@ -330,6 +354,7 @@ public class ProjectSeedDataInitializer implements ApplicationRunner {
             List<String> categories,
             List<String> skills) {
         return Project.builder()
+                .client(client)
                 .title(title)
                 .area(area)
                 .employmentType(EmploymentType.RESIDENT)

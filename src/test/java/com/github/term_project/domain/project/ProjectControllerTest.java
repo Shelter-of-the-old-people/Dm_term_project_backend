@@ -25,7 +25,7 @@ class ProjectControllerTest {
     void getProjectsReturnsFirstPageWithFourItems() throws Exception {
         mockMvc.perform(get("/api/projects")
                         .param("page", "1")
-                        .param("size", "4"))
+                        .param("size", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.items", hasSize(4)))
