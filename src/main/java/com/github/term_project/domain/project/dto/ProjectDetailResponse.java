@@ -25,5 +25,10 @@ public record ProjectDetailResponse(
         String workMethod,
         List<String> skills,
         LocalDate createdAt,
-        String summary) {
+        String summary,
+        String clientDisplayId,
+        String clientRegion,
+        Integer clientProjectCount,
+        Integer clientContractCount,
+        Integer clientTotalContractAmount) {
 }

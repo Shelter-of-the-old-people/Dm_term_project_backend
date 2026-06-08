@@ -57,7 +57,7 @@ class ProjectControllerTest {
                         .param("size", "4"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.items[0].title").value("병원 예약 키오스크 화면 개발"))
-                .andExpect(jsonPath("$.data.items[1].title").value("B2B SaaS 디자인 시스템 운영"))
+                .andExpect(jsonPath("$.data.items[1].title").value("외국인 대상 플랫폼형 앱 신규 개발"))
                 .andExpect(jsonPath("$.data.items[0].deadlineLabel").value("D-3"));
     }
 
@@ -70,6 +70,6 @@ class ProjectControllerTest {
                 .andExpect(jsonPath("$.data.employmentType").value("outsourcing"))
                 .andExpect(jsonPath("$.data.categories", hasSize(3)))
                 .andExpect(jsonPath("$.data.skills", hasSize(3)))
-                .andExpect(jsonPath("$.data.summary").value("프리모아 메인 레퍼런스를 참고해 신뢰감 있는 기업형 사이트를 완성하는 프로젝트입니다."));
+                .andExpect(jsonPath("$.data.summary").value("프리모아 메인 레퍼런스를 참고한 기업형 브랜드 사이트와 관리자 페이지 구축 프로젝트입니다."));
     }
 }

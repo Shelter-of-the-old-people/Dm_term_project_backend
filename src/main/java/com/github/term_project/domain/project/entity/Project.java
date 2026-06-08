@@ -165,6 +165,33 @@ public class Project extends BaseTimeEntity {
         this.applicationCount = Math.max(0, applicationCount);
     }
 
+    public void overwriteSeedData(Project source) {
+        this.client = source.client;
+        this.title = source.title;
+        this.area = source.area;
+        this.employmentType = source.employmentType;
+        this.recruitStatus = source.recruitStatus;
+        this.budgetMin = source.budgetMin;
+        this.budgetMax = source.budgetMax;
+        this.monthlyWage = source.monthlyWage;
+        this.expectedDurationDays = source.expectedDurationDays;
+        this.applicationCount = source.applicationCount;
+        this.deadline = source.deadline;
+        this.postedAt = source.postedAt;
+        this.displayOrder = source.displayOrder;
+        this.kickoffSchedule = source.kickoffSchedule;
+        this.progressType = source.progressType;
+        this.planningStatus = source.planningStatus;
+        this.meetingLocation = source.meetingLocation;
+        this.workDescription = source.workDescription;
+        this.workMethod = source.workMethod;
+        this.summary = source.summary;
+        this.categories.clear();
+        this.categories.addAll(source.categories);
+        this.skills.clear();
+        this.skills.addAll(source.skills);
+    }
+
     public boolean isOwnedBy(Long clientId) {
         return client != null && client.getId().equals(clientId);
     }

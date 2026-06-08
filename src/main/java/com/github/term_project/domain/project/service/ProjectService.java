@@ -105,6 +105,8 @@ public class ProjectService {
     }
 
     private ProjectDetailResponse toDetailResponse(Project project) {
+        Long clientId = project.getClient().getId();
+
         return new ProjectDetailResponse(
                 project.getId(),
                 project.getTitle(),
@@ -127,7 +129,12 @@ public class ProjectService {
                 project.getWorkMethod(),
                 List.copyOf(project.getSkills()),
                 project.getPostedAt(),
-                project.getSummary());
+                project.getSummary(),
+                maskLoginId(project.getClient().getLoginId()),
+                project.getArea(),
+                Math.toIntExact(projectRepository.countByClient_Id(clientId)),
+                0,
+                0);
     }
 
     private String buildDeadlineLabel(LocalDate deadline) {
@@ -136,5 +143,16 @@ public class ProjectService {
             return "마감";
         }
         return "D-" + days;
+    }
+
+    private String maskLoginId(String loginId) {
+        if (loginId == null || loginId.isBlank()) {
+            return "client***";
+        }
+
+        String normalized = loginId.trim();
+        int visibleLength = Math.min(3, normalized.length());
+        int maskedLength = Math.max(3, normalized.length() - visibleLength);
+        return normalized.substring(0, visibleLength) + "*".repeat(maskedLength);
     }
 }

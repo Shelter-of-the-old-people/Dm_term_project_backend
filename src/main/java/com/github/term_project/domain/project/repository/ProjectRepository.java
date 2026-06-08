@@ -10,4 +10,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findAllByClient_IdOrderByPostedAtDescIdDesc(Long clientId);
 
     Optional<Project> findByIdAndClient_Id(Long projectId, Long clientId);
+
+    Optional<Project> findByDisplayOrder(Integer displayOrder);
+
+    long countByClient_Id(Long clientId);
 }
