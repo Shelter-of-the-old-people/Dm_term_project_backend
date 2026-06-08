@@ -49,10 +49,6 @@ public class AuthService {
             throw new BusinessException(ErrorCode.INVALID_CREDENTIALS);
         }
 
-        if (user.getRole() != AuthRole.from(request.role()).toRole()) {
-            throw new BusinessException(ErrorCode.ROLE_MISMATCH, "role does not match the account.");
-        }
-
         return storeSession(session, user);
     }
 

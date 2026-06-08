@@ -32,13 +32,12 @@ class AuthControllerTest {
                         .content("""
                                 {
                                   "loginId": "developer1",
-                                  "password": "1234",
-                                  "role": "developer"
+                                  "password": "1234"
                                 }
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.loginId").value("developer1"))
-                .andExpect(jsonPath("$.data.nickname").value("Developer Demo"))
+                .andExpect(jsonPath("$.data.nickname").value("브랜드 웹 프론트엔드"))
                 .andExpect(jsonPath("$.data.role").value("developer"))
                 .andReturn();
 
@@ -89,8 +88,7 @@ class AuthControllerTest {
                         .content("""
                                 {
                                   "loginId": "client1",
-                                  "password": "1234",
-                                  "role": "client"
+                                  "password": "1234"
                                 }
                                 """))
                 .andExpect(status().isOk())

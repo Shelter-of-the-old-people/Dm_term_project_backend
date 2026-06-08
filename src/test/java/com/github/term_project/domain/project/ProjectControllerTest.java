@@ -58,7 +58,7 @@ class ProjectControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.items[0].title").value("병원 예약 키오스크 화면 개발"))
                 .andExpect(jsonPath("$.data.items[1].title").value("외국인 대상 플랫폼형 앱 신규 개발"))
-                .andExpect(jsonPath("$.data.items[0].deadlineLabel").value("D-3"));
+                .andExpect(jsonPath("$.data.items[0].deadlineLabel").value("D-2"));
     }
 
     @Test

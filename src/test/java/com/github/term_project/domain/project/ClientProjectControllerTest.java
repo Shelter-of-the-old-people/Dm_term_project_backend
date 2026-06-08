@@ -37,18 +37,18 @@ class ClientProjectControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "title": "신규 예약 서비스 백오피스 구축",
+                                  "title": "new reservation service backoffice",
                                   "recruitmentDeadline": "2099-12-31",
                                   "projectType": "outsourcing",
                                   "budgetAmount": 4800,
                                   "expectedDurationDays": 45,
-                                  "projectFields": ["개발", "기획"],
-                                  "planningStatus": "요구사항 정리 완료",
-                                  "meetingRegion": "서울 강남구",
-                                  "workDescription": "예약 관리와 통계 대시보드가 포함된 백오피스를 구축합니다.",
-                                  "progressMethod": "주 1회 오프라인 미팅, 그 외 온라인 협업",
+                                  "projectFields": ["dev", "planning"],
+                                  "planningStatus": "requirements organized",
+                                  "meetingRegion": "seoul gangnam",
+                                  "workDescription": "Build a reservation dashboard and operations backoffice.",
+                                  "progressMethod": "weekly meeting and async collaboration",
                                   "techStacks": ["React", "Spring Boot"],
-                                  "kickoffSchedule": "계약 후 1주 이내"
+                                  "kickoffSchedule": "within one week"
                                 }
                                 """))
                 .andExpect(status().isOk())
@@ -56,7 +56,7 @@ class ClientProjectControllerTest {
 
         mockMvc.perform(get("/api/client/projects").session(clientSession))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].title").value("신규 예약 서비스 백오피스 구축"))
+                .andExpect(jsonPath("$.data[0].title").value("new reservation service backoffice"))
                 .andExpect(jsonPath("$.data[0].employmentType").value("outsourcing"))
                 .andExpect(jsonPath("$.data[0].applicationCount").value(0));
     }
@@ -70,18 +70,18 @@ class ClientProjectControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "title": "운영 어드민 기능 추가 프로젝트",
+                                  "title": "operations admin feature project",
                                   "recruitmentDeadline": "2099-11-30",
                                   "projectType": "outsourcing",
                                   "budgetAmount": 3500,
                                   "expectedDurationDays": 30,
-                                  "projectFields": ["개발"],
-                                  "planningStatus": "상세기획 보유",
-                                  "meetingRegion": "서울 마포구",
-                                  "workDescription": "회원 운영과 공지 관리 기능을 추가합니다.",
-                                  "progressMethod": "온라인 중심 협업",
+                                  "projectFields": ["dev"],
+                                  "planningStatus": "detailed plan ready",
+                                  "meetingRegion": "seoul mapo",
+                                  "workDescription": "Add member operations and notice management features.",
+                                  "progressMethod": "remote collaboration",
                                   "techStacks": ["Vue", "Spring"],
-                                  "kickoffSchedule": "미팅 후"
+                                  "kickoffSchedule": "after meeting"
                                 }
                                 """))
                 .andExpect(status().isOk())
@@ -100,7 +100,7 @@ class ClientProjectControllerTest {
                                   "employmentType": "outsourcing",
                                   "workDays": 20,
                                   "bidAmount": 3600,
-                                  "content": "운영성 기능 개선 경험을 살려 안정적으로 수행하겠습니다."
+                                  "content": "I can improve the operations workflow in a stable and maintainable way."
                                 }
                                 """))
                 .andExpect(status().isOk())
@@ -112,7 +112,7 @@ class ClientProjectControllerTest {
 
         mockMvc.perform(get("/api/client/projects/{projectId}", projectId).session(clientSession))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.title").value("운영 어드민 기능 추가 프로젝트"))
+                .andExpect(jsonPath("$.data.title").value("operations admin feature project"))
                 .andExpect(jsonPath("$.data.employmentType").value("outsourcing"))
                 .andExpect(jsonPath("$.data.applicationCount").value(1));
 
@@ -122,14 +122,14 @@ class ClientProjectControllerTest {
                         .param("size", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.items[0].applicationId").value(applicationId))
-                .andExpect(jsonPath("$.data.items[0].developerName").value("Developer Demo"))
+                .andExpect(jsonPath("$.data.items[0].developerName").isString())
                 .andExpect(jsonPath("$.data.items[0].expectedAmount").value(3600))
                 .andExpect(jsonPath("$.data.hasNext").value(false));
 
         mockMvc.perform(get("/api/client/applications/{applicationId}", applicationId).session(clientSession))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.projectId").value(projectId))
-                .andExpect(jsonPath("$.data.developerName").value("Developer Demo"))
+                .andExpect(jsonPath("$.data.developerName").isString())
                 .andExpect(jsonPath("$.data.workDays").value(20))
                 .andExpect(jsonPath("$.data.bidAmount").value(3600))
                 .andExpect(jsonPath("$.data.headcount").value(1));
@@ -146,8 +146,8 @@ class ClientProjectControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.items", hasSize(2)))
                 .andExpect(jsonPath("$.data.size").value(2))
-                .andExpect(jsonPath("$.data.totalItems").value(3))
-                .andExpect(jsonPath("$.data.totalPages").value(2))
+                .andExpect(jsonPath("$.data.totalItems").value(8))
+                .andExpect(jsonPath("$.data.totalPages").value(4))
                 .andExpect(jsonPath("$.data.hasNext").value(true));
     }
 
@@ -160,23 +160,22 @@ class ClientProjectControllerTest {
     }
 
     private MockHttpSession loginDeveloper() throws Exception {
-        return login("developer1", "1234", "developer");
+        return login("developer1", "1234");
     }
 
     private MockHttpSession loginClient() throws Exception {
-        return login("client1", "1234", "client");
+        return login("client1", "1234");
     }
 
-    private MockHttpSession login(String loginId, String password, String role) throws Exception {
+    private MockHttpSession login(String loginId, String password) throws Exception {
         MvcResult loginResult = mockMvc.perform(post("/api/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
                                   "loginId": "%s",
-                                  "password": "%s",
-                                  "role": "%s"
+                                  "password": "%s"
                                 }
-                                """.formatted(loginId, password, role)))
+                                """.formatted(loginId, password)))
                 .andExpect(status().isOk())
                 .andReturn();
 

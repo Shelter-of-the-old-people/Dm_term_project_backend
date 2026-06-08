@@ -24,27 +24,31 @@ public class UserSeedDataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         List<User> missingUsers = new ArrayList<>();
 
-        ensureUser(missingUsers, "developer1", "1234", "Developer Demo", Role.DEVELOPER);
-        ensureUser(missingUsers, "developer2", "1234", "Frontend Demo", Role.DEVELOPER);
-        ensureUser(missingUsers, "developer3", "1234", "Backend Demo", Role.DEVELOPER);
-        ensureUser(missingUsers, "client1", "1234", "Client Demo", Role.CLIENT);
-        ensureUser(missingUsers, "client2", "1234", "Client Alpha", Role.CLIENT);
+        syncUser(missingUsers, "developer1", "1234", "브랜드 웹 프론트엔드", Role.DEVELOPER);
+        syncUser(missingUsers, "developer2", "1234", "플랫폼 UI 개발자", Role.DEVELOPER);
+        syncUser(missingUsers, "developer3", "1234", "API 백엔드 엔지니어", Role.DEVELOPER);
+        syncUser(missingUsers, "developer4", "1234", "서비스기획형 개발자", Role.DEVELOPER);
+        syncUser(missingUsers, "developer5", "1234", "앱구축 파트너", Role.DEVELOPER);
+        syncUser(missingUsers, "developer6", "1234", "운영 백엔드 전문가", Role.DEVELOPER);
+        syncUser(missingUsers, "developer7", "1234", "상주 QA 매니저", Role.DEVELOPER);
+        syncUser(missingUsers, "developer8", "1234", "데이터 대시보드 분석가", Role.DEVELOPER);
+        syncUser(missingUsers, "client1", "1234", "Client Demo", Role.CLIENT);
+        syncUser(missingUsers, "client2", "1234", "Client Alpha", Role.CLIENT);
 
         if (!missingUsers.isEmpty()) {
             userRepository.saveAll(missingUsers);
         }
     }
 
-    private void ensureUser(List<User> missingUsers, String loginId, String password, String nickname, Role role) {
-        if (userRepository.existsByLoginId(loginId)) {
-            return;
-        }
-
-        missingUsers.add(User.builder()
-                .loginId(loginId)
-                .password(password)
-                .nickname(nickname)
-                .role(role)
-                .build());
+    private void syncUser(List<User> missingUsers, String loginId, String password, String nickname, Role role) {
+        userRepository.findByLoginId(loginId)
+                .ifPresentOrElse(
+                        user -> user.updateSeedNickname(nickname),
+                        () -> missingUsers.add(User.builder()
+                                .loginId(loginId)
+                                .password(password)
+                                .nickname(nickname)
+                                .role(role)
+                                .build()));
     }
 }
